@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./Register.css"/>
+</head>
+<body>
+    <section class="main-section">
+        <div class="heading">
+            <h5 class="register-heading">Register Form</h5>
+        </div>
+        <br> 
+        <div class="register-form">
+            <form id="registerForm" method="POST" action="/submit" onsubmit="return validate();">
+                <div class="input-field">
+                    <!-- <p class="alertmsg" id="fnamealert"></p>    -->
+                    <input type="text" name="firstname" id="firstname" required />
+                    <label class="labelline">First name</label> 
+                </div>
+                <br>
+                <div class="input-field">
+                    <!-- <p class="alertmsg" id="lnamealert"></p>            -->
+                    <input type="text" name="lastname" id="lastname" required />
+                    <label class="labelline">Last name</label>  
+                </div>
+                
+                <br>
+                <div class="input-field">
+                    <p class="alertmsg" id="emailalert"></p>                    
+                    <input type="text" name="email" id="email" required />   
+                    <label class="labelline">Email Id</label>                 
+                </div>
+                
+                <br>
+                <div class="input-field">
+                    <p class="alertmsg" id="companyalert"></p>                    
+                    <input type="text" name="company" id="company" required />  
+                    <label class="labelline">Company</label>                  
+                </div>
+                
+                <br>
+                <div class="input-field">
+                    <p class="alertmsg" id="passalert"></p>                
+                    <input type="password" name="password" id="password" required /> 
+                    <label class="labelline">Password</label>                    
+                </div>
+                
+                <br>
+                <div class="input-field">
+                    <p class="alertmsg" id="conpassalert"></p>                    
+                    <input type="password" name="conpassword" id="conpassword" required />        
+                    <label class="labelline">Confirm Password</label>             
+                </div>
+                
+                <br>
+                <button class="submitbtn" id="regsubmitbtn" type="submit">Submit</button>
+            </form>
+        </div>
+    </section>
+    <script src="./Validation.js" defer></script>
+</body>
+</html>
