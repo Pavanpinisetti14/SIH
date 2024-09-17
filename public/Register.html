@@ -59,6 +59,16 @@
             </form>
         </div>
     </section>
+    {% if alert %}
+    <script>
+        alert('Registeration successful..');
+    </script>
+   
+    {% else %}
+    <script>
+        alert('Login failed. Please check your credentials.');
+    </script>
+{% endif %}
     <script src="./Validation.js" defer></script>
 </body>
 </html>

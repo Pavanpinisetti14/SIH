@@ -1,28 +1,33 @@
-from flask import Flask, request, redirect, jsonify, send_from_directory
+from flask import Flask, request, redirect, jsonify, send_from_directory, render_template, session
 from pymongo import MongoClient
 import re
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
 
-app = Flask(__name__, static_folder='public')
+app = Flask(__name__, static_folder='public', template_folder='public')
+app.secret_key = 'login'
 
-# MongoDB connection
-mongo_uri = 'mongodb+srv://Arjun:Pavan2003@cluster.pd7vx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster'
+# MongoDB Connection
+mongo_uri = 'mongodb+srv://Arjun:Pavan2003@cluster.pd7vx.mongodb.net/test?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true'
 client = MongoClient(mongo_uri)
-db = client['test']  # Replace 'test' with your actual database name
+db = client['test']
 data_collection = db.data
 
-# Serve static files from 'public' directory
+# Static file serving
 @app.route('/<path:filename>')
 def serve_static(filename):
     return send_from_directory(app.static_folder, filename)
 
 @app.route('/')
 def home():
-    return redirect('/index.html')
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/signup')
 def signup():
-    return redirect('/Register.html')
+    return send_from_directory(app.static_folder, 'Register.html')
 
+# User registration
 @app.route('/submit', methods=['POST'])
 def submit():
     firstname = request.form.get('firstname')
@@ -32,6 +37,7 @@ def submit():
     password = request.form.get('password')
     conpassword = request.form.get('conpassword')
 
+    # Validate form data
     errors = valid(email, password, conpassword)
     
     if errors:
@@ -48,10 +54,12 @@ def submit():
     try:
         data_collection.insert_one(new_data)
         print("Data Successfully Stored")
-        return jsonify({'success': True}), 200
+        return render_template('/index.html', alert=True)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        print(f"Error: {e}")
+        return render_template('/Register.html', alert=False)
 
+# User login
 @app.route('/login')
 def login():
     return send_from_directory(app.static_folder, 'login.html')
@@ -62,19 +70,66 @@ def loginsubmit():
     password = request.form.get('password')
 
     if not email or not password:
-        return jsonify({'error': 'Both fields are required'}), 400
+        return render_template('/user.html', alert=True)
 
     user = data_collection.find_one({'email': email})
 
     if user:
         if user['password'] == password:
-            print("Login Succesfull")
-            return redirect('/user.html')  # Use redirect to navigate to user.html
+            print("Login Successful")
+            # Store user details in session
+            # print(user['firstname'])
+            session['firstname'] = user['firstname']
+            session['lastname'] = user['lastname']
+            session['email'] = user['email']
+            return redirect('/scrape')
         else:
-            return jsonify({'error': 'Invalid password'}), 401
+            return render_template('/login.html', passalert=True)
     else:
-        return jsonify({'error': 'User not found'}), 404
+        return render_template('/login.html', useralert=True)
 
+# Scrape data from the website and filter it by last name
+@app.route('/scrape')
+def scrape():
+    url = "https://oem-xi.vercel.app/"
+    webdata = requests.get(url)
+    data = BeautifulSoup(webdata.content, 'html.parser')
+
+    tabeldata = data.find('table', id='vulnTable')
+    if not tabeldata:
+        return "Element Not Found!"
+
+    li = []
+    row = tabeldata.find_all('tr')
+    for rows in row:
+        col = rows.find_all('td')
+        tabel = [cols.get_text(strip=True) for cols in col]
+        li.append(tabel)
+
+    if li:
+        li.pop(0)  
+
+    # Define column names
+    columns = ["Company Name", "Product", "Manufacturing Date", "Issuses/Vulnerability's", "Level","Company Email", "Category","Code Name"]
+    df = pd.DataFrame(li, columns=columns)
+    df = df[df['Company Email'] == session.get('email')]
+
+    levels = ['Critical', 'High']
+    df = df[df['Level'].isin(levels)]
+
+    print("Filtered DataFrame based on user's email and Level:")
+    print(df) 
+
+    # Convert DataFrame to HTML for rendering
+    table_html = df.to_html(classes='table table-striped', index=False)
+    print(session)
+    # Get user details from session
+    firstname = session.get('firstname','')
+    lastname = session.get('lastname', '')
+
+    return render_template('user.html', table_html=table_html, firstname=firstname, lastname=lastname)
+
+# Form data validation function
 def valid(email, password, conpassword):
     errors = {}
     
@@ -93,5 +148,6 @@ def valid(email, password, conpassword):
 
     return errors
 
+# Run the app
 if __name__ == '__main__':
-    app.run(port=1432)
+    app.run(port=1432, debug=True)
