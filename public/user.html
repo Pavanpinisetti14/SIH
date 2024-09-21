@@ -16,7 +16,7 @@
             <div class="header-data">
                 <a class="header-data-a" href="#">Home</a>
                 <a class="header-data-a" href="#">Vulnerabilities</a>
-                <a class="header-data-a" href="#" onclick="move()">Log Out</a>
+                <a class="header-data-a" href="{{url_for('logout')}}">Log Out</a>
             </div>
             <div>
                 <a class="header-data-a" href="#">Help</a>
@@ -35,10 +35,10 @@
             {{ table_html | safe }}
         </div>
     </section>
-    <script>
+    <!-- <script>
         function move(){
             window.location.href = './index.html';
         }
-    </script>
+    </script> -->
 </body>
 </html>

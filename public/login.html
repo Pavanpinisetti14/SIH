@@ -7,38 +7,36 @@
     <link href="./Register.css" rel="stylesheet" />
 </head>
 <body>
-    <section class="main-section">
+    <div class="main-section">
         <div class="heading">
             <h2>Login</h2>
         </div>
         <br>
         <div class="register-form">
-            <form method="POST" action="/loginsubmit">
+            <form action="loginsubmit" method="POST">
                 <div class="input-field">
-                    <input type="text" name="email" required>
-                    <label>Email Id</label>
+                    <input type="text" name="email" for="uname" required>
+                    <label id="uname">Email Id</label>
                 </div>
                 <br>
                 <div class="input-field">
-                    <input type="password" name="password" required>
-                    <label>Password</label>
+                    <input type="password" name="password" for="pass" required>
+                    <label id="pass">Password</label>
                 </div>
                 <br>
                 <button class="submitbtn" type="submit">Submit</button>
+
+                {% if unamealert %}
+                <script>alert("Invalid Email Address")</script>
+                {% endif %}
+                
+                {% if passalert %}
+                <script>
+                    alert("Invalid Password");
+                </script>
+                {% endif %}
             </form>
         </div>
-        <div style="display: none;" id="msg">
-            {% if alert %}
-            <p>{{alert}}</p>
-            {% endif %}
-            <!--{% if useralert %}
-            <script>alert("User name Incorrect")</script>
-            {% endif %}
-            {% if passalert %}
-            <script>alert("Password Failed")</script>
-            {% endif %} -->
-            
-        </div>
-    </section>
+    </div>
 </body>
 </html>

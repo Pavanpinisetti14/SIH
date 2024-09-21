@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Registeration</title>
     <link rel="stylesheet" href="./Register.css"/>
 </head>
 <body>
@@ -13,7 +13,7 @@
         </div>
         <br> 
         <div class="register-form">
-            <form id="registerForm" method="POST" action="/submit" onsubmit="return validate();">
+            <form id="registerForm" method="POST" action="submit" onsubmit="return validate();">
                 <div class="input-field">
                     <!-- <p class="alertmsg" id="fnamealert"></p>    -->
                     <input type="text" name="firstname" id="firstname" required />
@@ -56,19 +56,20 @@
                 
                 <br>
                 <button class="submitbtn" id="regsubmitbtn" type="submit">Submit</button>
+                {% if emailerror %}
+                <script>alert("Invalid Email Address Then Go Back And enter Email Valid Email Address")</script>
+                {% endif %}
+
+                {% if passerror %}
+                <script>alert("Choose Strong Password,It Contains A-Z and a-z and 0-9 and special Character.....")</script>
+                {% endif %}
+
+                {% if compasserror %}
+                <script>alert("Password Doesn't Match")</script>
+                {% endif %}
             </form>
         </div>
     </section>
-    <!-- {% if alert %}
-    <script>
-        alert('Registeration successful..');
-    </script>
-   
-    {% else %}
-    <script>
-        alert('Login failed. Please check your credentials.');
-    </script>
-{% endif %} -->
     <script src="./Validation.js" defer></script>
 </body>
 </html>

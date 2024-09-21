@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, jsonify, send_from_directory, render_template, session
+from flask import *
 from pymongo import MongoClient
 import re
 import requests
@@ -21,11 +21,11 @@ def serve_static(filename):
 
 @app.route('/')
 def home():
-    return send_from_directory(app.static_folder, 'index.html')
+    return render_template('index.html')
 
 @app.route('/signup')
 def signup():
-    return send_from_directory(app.static_folder, 'Register.html')
+    return render_template('Register.html')
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -35,40 +35,45 @@ def submit():
     company = request.form.get('company')
     password = request.form.get('password')
     conpassword = request.form.get('conpassword')
-   
-    errors = valid(email, password, conpassword)
-    
-    if errors:
-        return jsonify(errors), 400
 
-    new_data = {
+    # error = None
+    # emailerror = valid(email, password, conpassword)
+    
+    if valid(email):
+        return render_template('Register.html',emailerror=True)
+    elif passwordvalid(password):
+        return render_template('Register.html',passerror=True)
+    elif comparepasswrod(password,conpassword):
+        return render_template('Register.html',compasserror=True)
+    else:
+        new_data = {
         'firstname': firstname,
         'lastname': lastname,
         'email': email,
         'company': company,
         'password': password
-    }
+        }
 
-    try:
-        data_collection.insert_one(new_data)
-        print("Data Successfully Stored")
-        return render_template('/index.html', alert=True)
-    except Exception as e:
-        print(f"Error: {e}")
-        return render_template('/Register.html', alert=False)
+        try:
+            data_collection.insert_one(new_data)
+            print("Data Successfully Stored")
+            return render_template('/index.html',success="True")
+        except Exception as e:
+            print(f"Error: {e}")
+            return render_template('/Register.html', alert=True)
 
 
 @app.route('/login')
 def login():
-    return send_from_directory(app.static_folder, 'login.html')
+    return render_template('login.html')
 
 @app.route('/loginsubmit', methods=['POST'])
 def loginsubmit():
     email = request.form.get('email')
     password = request.form.get('password')
 
-    if not email or not password:
-        return render_template('/login.html', alert="Invalid Fields")
+    # if not email or not password:
+    #     return render_template('/login.html', alert="Invalid Fields")
 
     user = data_collection.find_one({'email': email})
 
@@ -80,9 +85,9 @@ def loginsubmit():
             session['email'] = user['email']
             return redirect('/scrape')
         else:
-            return render_template('/login.html', alert="Inavlid Password")
+            return render_template('login.html',passalert="Inavlid Password")
     else:
-        return render_template('/login.html', alert="Invalid Email Address")
+        return render_template('login.html',unamealert="Invalid Email Address")
 
 
 @app.route('/scrape')
@@ -113,34 +118,41 @@ def scrape():
     levels = ['Critical', 'High']
     df = df[df['Level'].isin(levels)]
 
-    print("Filtered DataFrame based on user's email and Level:")
-    print(df) 
-
-
     table_html = df.to_html(classes='table table-striped', index=False)
-    print(session)
+    # print(session)
    
     firstname = session.get('firstname','')
     lastname = session.get('lastname', '')
 
     return render_template('user.html', table_html=table_html, firstname=firstname, lastname=lastname)
 
-def valid(email, password, conpassword):
-    errors = {}
-    
+@app.route('/logout')
+def logout():
+    session.pop('email',None)
+    session.pop('firstname',None)
+    session.pop('lastname',None)
+
+    response = make_response(render_template('login.html'))
+    response.set_cookie('jwt_token', '', expires=0)
+
+    return response
+
+def valid(email):
     email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     if not re.match(email_regex, email):
-        errors['email'] = 'Invalid email address'
+        return True
+    return False
 
-
+def passwordvalid(password):
     passregex = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$')
     if not passregex.match(password):
-        errors['password'] = 'Password must be at least 8 characters long and include a mix of uppercase, lowercase, digits, and special characters'
-    
-    if password != conpassword:
-        errors['conpassword'] = 'Passwords do not match'
+        return True
+    return False
 
-    return errors
+def comparepasswrod(password, conpassword):
+    if password != conpassword:
+        return True
+    return False
 
 if __name__ == '__main__':
     app.run(port=1432, debug=True)

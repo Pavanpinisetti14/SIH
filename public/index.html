@@ -16,7 +16,7 @@
                 <a class="header-data-a" href="#">Home</a>
                 <a class="header-data-a" href="#">Vulnerability's</a>
                 <a class="header-data-a" href="/login">Login</a>
-                <a href="/signup" class="header-data-a" id="signup">SignUp</a>
+                <a href="signup" class="header-data-a" id="signup">SignUp</a>
             </div>
             <div>
                 <a class="header-data-a" href="#">Help</a>
@@ -39,6 +39,11 @@
             </div>
         </section>
     </main>
+    <!-- <form> -->
+        {% if success %}
+        <script>alert("Registration Succesfully Completed")</script>
+        {% endif %}
+    <!-- </form> -->
     <br><br>
     <footer>
         <!-- Logo Section -->
