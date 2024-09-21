@@ -27,16 +27,16 @@
                 <button class="submitbtn" type="submit">Submit</button>
             </form>
         </div>
-        <div style="display: none;">
+        <div style="display: none;" id="msg">
             {% if alert %}
-            <script>alert("Login Failed")</script>
+            <p>{{alert}}</p>
             {% endif %}
-            {% if useralert %}
+            <!--{% if useralert %}
             <script>alert("User name Incorrect")</script>
             {% endif %}
             {% if passalert %}
             <script>alert("Password Failed")</script>
-            {% endif %}
+            {% endif %} -->
             
         </div>
     </section>
