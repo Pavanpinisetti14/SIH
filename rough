@@ -1,0 +1,141 @@
+footer {
+    height: 100%;
+    background-color: #000000;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo-container img {
+    width: 150px; /* Adjust the logo size */
+}
+
+.footer-container {
+    /* max-width: 900px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 0 20px; */
+    display: flex;
+    flex-direction: row;
+}
+
+.footer-container div {
+    flex: 1;
+    margin: 0 10px;
+}
+.contact{
+    font-size: 1rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #00d8ff; /* Light blue accent */
+}
+
+.footer-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-container li {
+    margin-bottom: 10px;
+}
+
+.footer-container a {
+    text-decoration: none;
+    color: #ffffff;
+    transition: color 0.3s ease;
+}
+
+.footer-container a:hover {
+    color: #00d8ff;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* margin-left: 10px; */
+    width: 100%;
+}
+
+.form-container h2 {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #00d8ff;
+}
+
+/* Form layout */
+.form-container form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-row {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+.inputfiled{
+    width: 100%;
+}
+.form-row input[type="email"],
+.form-row input[type="tel"] {
+    /* width: 100%; */
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #cccccc;
+    flex: 1;
+}
+
+.form-container textarea {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #cccccc;
+    width: 100%;
+    resize: none;
+}
+
+.form-container input[type="submit"] {
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #00d8ff;
+    color: #003366;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-container input[type="submit"]:hover {
+    background-color: #00bfff;
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-container div {
+        margin-bottom: 30px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .form-container {
+        width: 100%;
+        margin-left: 0; /* No margin on small screens */
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+}

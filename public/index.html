@@ -26,15 +26,62 @@
     <main>
         <section>
             <div class="banner-vuln">
-                <div style="object-fit: cover;">
+                <div class="banner">
                     <img src="https://res.cloudinary.com/dwjafitz1/image/upload/v1726571023/ss14fobuaalpv6ozfeft.png" alt="banner" width="100%" height="100%">
                 </div>
             </div>
         </section>
         <section>
             <div class="solution">
-                <div class="solution-data">
-
+                <div class="card-wrapper">
+                    <button class="control-button prev-button" id="prev-button">◀</button>
+                    <div class="card-container" id="card-container">
+                        <!-- Cards here -->
+                        <div class="wcu-card">
+                            <img src="https://d1tgh8fmlzexmh.cloudfront.net/ccbp-responsive-website/food-serve.png" class="wcu-card-image" alt="Food Service Image" />
+                            <h1 class="wcu-card-title">Food Service</h1>
+                            <p class="wcu-card-description">
+                                Experience fine dining at the comfort of your home. All our orders are carefully packed and arranged to give you the best experience.
+                            </p>
+                        </div>
+                        <div class="wcu-card">
+                            <img src="https://d1tgh8fmlzexmh.cloudfront.net/ccbp-responsive-website/food-serve.png" class="wcu-card-image" alt="Food Service Image" />
+                            <h1 class="wcu-card-title">Food Service</h1>
+                            <p class="wcu-card-description">
+                                Experience fine dining at the comfort of your home. All our orders are carefully packed and arranged to give you the best experience.
+                            </p>
+                        </div>
+                        <div class="wcu-card">
+                            <img src="https://d1tgh8fmlzexmh.cloudfront.net/ccbp-responsive-website/food-serve.png" class="wcu-card-image" alt="Food Service Image" />
+                            <h1 class="wcu-card-title">Food Service</h1>
+                            <p class="wcu-card-description">
+                                Experience fine dining at the comfort of your home. All our orders are carefully packed and arranged to give you the best experience.
+                            </p>
+                        </div>
+                        <div class="wcu-card">
+                            <img src="https://d1tgh8fmlzexmh.cloudfront.net/ccbp-responsive-website/food-serve.png" class="wcu-card-image" alt="Food Service Image" />
+                            <h1 class="wcu-card-title">Food Service</h1>
+                            <p class="wcu-card-description">
+                                Experience fine dining at the comfort of your home. All our orders are carefully packed and arranged to give you the best experience.
+                            </p>
+                        </div>
+                        <div class="wcu-card">
+                            <img src="https://d1tgh8fmlzexmh.cloudfront.net/ccbp-responsive-website/food-serve.png" class="wcu-card-image" alt="Food Service Image" />
+                            <h1 class="wcu-card-title">Food Service</h1>
+                            <p class="wcu-card-description">
+                                Experience fine dining at the comfort of your home. All our orders are carefully packed and arranged to give you the best experience.
+                            </p>
+                        </div>
+                        <div class="wcu-card">
+                            <img src="https://d1tgh8fmlzexmh.cloudfront.net/ccbp-responsive-website/food-serve.png" class="wcu-card-image" alt="Food Service Image" />
+                            <h1 class="wcu-card-title">Food Service</h1>
+                            <p class="wcu-card-description">
+                                Experience fine dining at the comfort of your home. All our orders are carefully packed and arranged to give you the best experience.
+                            </p>
+                        </div>
+                        <!-- Repeat the .wcu-card block as needed -->
+                    </div>
+                    <button class="control-button next-button" id="next-button">▶</button>
                 </div>
             </div>
         </section>
@@ -44,47 +91,109 @@
         <script>alert("Registration Succesfully Completed")</script>
         {% endif %}
     <!-- </form> -->
-    <br><br>
     <footer>
-        <!-- Logo Section -->
-        <div class="logo-container">
-            <img src="https://res.cloudinary.com/dwjafitz1/image/upload/v1726567787/ya1d57stcocbj3a1okhu.png" alt="logo" width="200px" height="80px" style="border-radius: 50%;">
-        </div>
-
-        <div class="footer-container">
-            <div>
-                <h2 class="contact-heading">Web Scraping Tool</h2>
-                <ul>
-                    <li><a href="#">Features</a></li>
-                    <li><a href="#">Pricing</a></li>
-                    <li><a href="#">Use Cases</a></li>
-                    <li><a href="#">Integrations</a></li>
-                </ul>
+        <main class="main-footer">
+            <!-- <br> -->
+            <div class="footer-logo-container">
+                <img class="footer-logo" src="https://res.cloudinary.com/dwjafitz1/image/upload/v1726567787/ya1d57stcocbj3a1okhu.png" alt="logo">
             </div>
-            <div>
-                <h2>Resources</h2>
-                <ul>
-                    <li><a href="#">Documentation</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Tutorials</a></li>
-                    <li><a href="#">FAQ</a></li>
-                </ul>
-            </div>
-            <div>
-                <h2 class="contact">Contact Us</h2>
-                <div class="form-container">
-                    <form action="#" method="post">
-                        <div class="form-row">
-                            <input class="inputfiled" type="tel" name="phone" placeholder="Enter your mobile number" required>
-                            <input class="inputfiled" type="email" name="email" placeholder="Enter your email" required>
+            <br>
+            <div class="footer-container">
+                <div class="footer-details">
+                    <div class="footer-inner-details">
+                        <div class="webscraptool">
+                            <h2 class="contact-heading">Web Scraping Tool</h2>
+                            <ul class="footer-list">
+                                <li><a>Features</a></li>
+                                <li><a>Pricing</a></li>
+                                <li><a>Use Cases</a></li>
+                                <li><a>Integrations</a></li>
+                            </ul>
                         </div>
-                        <textarea name="feedback" rows="4" placeholder="Enter your feedback"></textarea>
-                        <input type="submit" value="Submit">
-                    </form>
+                        <!-- <br> -->
+                        <div class="webscraptool">
+                            <h2 class="contact-heading">Resources</h2>
+                            <ul class="footer-list">
+                                <li><a>Documentation</a></li>
+                                <li><a>Blog</a></li>
+                                <li><a>Tutorials</a></li>
+                                <li><a>FAQ</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    ]<br>
+                    <div class="socialmedia">
+                        <div class="research-paper">
+                            <img src="https://res.cloudinary.com/dwjafitz1/image/upload/v1726900163/tzwnvjgcrhgmxhu4ltqj.png" alt="artical logo" width="35px" height="35px">
+                            <span class="papper-des">Vulnerability Details</span>
+                        </div>
+                        <div class="feed">
+                            <img src="https://res.cloudinary.com/dwjafitz1/image/upload/v1726900707/dzdyntrh83zrwkhp8lgm.png" alt="feeds" width="35px" height="35px">
+                            <span class="papper-des">Real Time Inncident's</span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="webscraptool1">
+                    <h2 class="contact-heading">Contact Us</h2>
+                    <br>
+                    <div class="form-container">
+                        <form>
+                            <div class="fields">
+                                <div class="form-row">
+                                    <input class="inputfiled" type="tel" name="phone" placeholder="Enter your mobile number" required>
+                                    <input class="inputfiled" type="email" name="email" placeholder="Enter your email" required>
+                                </div>
+                                <textarea class="txtarea" name="feedback" rows="4" placeholder="Enter your feedback"></textarea>
+                            </div>
+                            <br>
+                            <div class="footer-btn">
+                                <button class="submitbtn">submit</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        </main>
     </footer>
-    
+    <script>
+        const cardContainer = document.getElementById('card-container');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+
+        let currentIndex = 0;
+        const cardsPerPage = 4;
+        const cardWidth = 300; // Width of each card
+        const cardMargin = 20; // Margin between cards
+        const totalCards = document.querySelectorAll('.wcu-card').length;
+        const totalPages = Math.ceil(totalCards / cardsPerPage);
+
+        function updatePaginationButtons() {
+            prevButton.disabled = currentIndex === 0;
+            nextButton.disabled = currentIndex >= totalPages - 1;
+        }
+
+        function updateCardContainer() {
+            const offset = -currentIndex * cardsPerPage * (cardWidth + cardMargin * 2);
+            cardContainer.style.transform = `translateX(${offset}px)`;
+            updatePaginationButtons();
+        }
+
+        prevButton.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCardContainer();
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentIndex < totalPages - 1) {
+                currentIndex++;
+                updateCardContainer();
+            }
+        });
+
+        updatePaginationButtons();
+    </script>
 </body>
 </html>
