@@ -7,7 +7,7 @@
     box-sizing: border-box;
 }
 body {
-    background-color: #A1D6E2;
+    background-color: #000000;
 }
 
 /* Form section */
@@ -26,6 +26,7 @@ body {
     font-size: 24px;
     font-family: 'Poppins', sans-serif;
     font-style: italic;
+    color: #FFFFFF;
 }
 
 .register-form {
@@ -85,9 +86,9 @@ input:focus + .labelline
     width: 100%;
     height:100%;
     background:transparent;
-    color: #000;
+    color: #FFFFFF;
     outline: none;
-    border: 2px solid #fff;
+    border: 2px solid #F3CA20;
     border-radius:10px;
     font-size:18px;
     padding: 0 20px;
@@ -102,11 +103,11 @@ input:focus + .labelline
     pointer-events: none;
     font-family:'Poppins', sans-serif;
     transition: 0.1s ease;
-    background-color: #A1D6E2;
-    color: #fff;
+    background-color: #000000;
+    color: #FFFFFF;
 }
 .input-field :focus{
-    color: #fff;
+    color: #FFFFFF;
 }
 .input-field input:focus + label,
 .input-field input:valid + label{
@@ -121,9 +122,9 @@ input:focus + .labelline
     font-size: 18px;
     font-family: 'Roboto Condensed', sans-serif;
     background-color: transparent;
-    border: 2px solid #fff;
+    border: 2px solid #F3CA20;
     border-radius: 20px;
-    color: #fff;
+    color: #FFFFFF;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
 }

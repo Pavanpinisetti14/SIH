@@ -1,5 +1,5 @@
 from flask import *
-from pymongo import MongoClient
+from pymongo import *
 import re
 import requests
 from bs4 import BeautifulSoup
