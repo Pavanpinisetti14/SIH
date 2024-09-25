@@ -55,7 +55,11 @@
                 </div>
                 
                 <br>
-                <button class="submitbtn" id="regsubmitbtn" type="submit">Submit</button>
+                <div class="conditions">
+                    <label><input class="term-condition" type="checkbox" id="check-box" required/>Agree The Terms and Conditions</label>
+                </div>
+                <br>
+                <button class="submitbtn" id="regsubmitbtn" type="submit">Register</button>
                 {% if emailerror %}
                 <script>alert("Invalid Email Address Then Go Back And enter Email Valid Email Address")</script>
                 {% endif %}

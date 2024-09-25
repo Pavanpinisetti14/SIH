@@ -9,7 +9,7 @@
 <body>
     <div class="main-section">
         <div class="heading">
-            <h2 style="color: #FFFFFF;">Stay With Us</h2>
+            <h2 style="color: #F3CA20; font-family:sans-serif;">Stay With Us</h2>
         </div>
         <br>
         <div class="register-form">
@@ -24,7 +24,14 @@
                     <label id="pass">Password</label>
                 </div>
                 <br>
-                <button class="submitbtn" type="submit">Submit</button>
+                <div class="forget-pass redirect"><a  class="forget re" href="/forgetpasswod">Forget Password ?</a></div>
+                <br>
+                <div class="signup-redirect redirect">
+                    Don't have an account?
+                    <a href="/signup" class="signup-re re">Signup</a> 
+                </div>
+                <br>
+                <button style="cursor:pointer;"class="submitbtn" type="submit">Submit</button>
 
                 {% if unamealert %}
                 <script>alert("Invalid Email Address")</script>
