@@ -10,8 +10,8 @@ from email.message import EmailMessage
 
 app = Flask(__name__, static_folder='public', template_folder='public')
 app.secret_key = 'login'
-
- 
+otp = []
+email = []
 mongo_uri = 'mongodb+srv://Arjun:Pavan2003@cluster.pd7vx.mongodb.net/test?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true'
 client = MongoClient(mongo_uri)
 db = client['test']
@@ -39,8 +39,6 @@ def submit():
     password = request.form.get('password')
     conpassword = request.form.get('conpassword')
 
-    # error = None
-    # emailerror = valid(email, password, conpassword)
     
     if valid(email):
         return render_template('Register.html',emailerror=True)
@@ -161,34 +159,81 @@ def comparepasswrod(password, conpassword):
 def forgetpassword():
     return render_template('forgetpassword.html')
 
-@app.route("/sendotp", methods=['POST','GET'])
+@app.route("/sendotp", methods=['POST', 'GET'])
 def sendotp():
-    otp = random.randint(100000, 999999)
+    generatedotp = random.randint(1000, 9999)
+    otp.append(generatedotp)
 
-    sender_email = "pavan.sbspcm246@gmail.com"
-    sender_password = "Sbsp@123"
+    sender_email = "alertarcnoreplay@gmail.com"
+    sender_password = "cbsm npqr wizh kmhv"
 
     message = EmailMessage()
-    message.set_content(f'Your OTP is: {otp}')
+    message.set_content(f'Your OTP is: {otp[0]}')
     message['Subject'] = 'Your OTP Code'
     message['From'] = sender_email
 
-    email = request.form.get('email')
-    email = data_collection.find_one({'email':email})
-    if email :
-        message['To'] = email
+    user_email = request.form.get('email')
+    email.append(user_email)
+    email_record = data_collection.find_one({'email': user_email})
+    
+    if email_record:
+        message['To'] = email_record['email']
     else:
-        msg = "Email Address Is Not found,Then Valid email"
-        return render_template('forgetpassword.html', msg = msg)
+        msg = "Email Address not found. Please enter a valid email."
+        return render_template('forgetpassword.html', msg=msg)
     
     try:
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
             smtp.login(sender_email, sender_password)
             smtp.send_message(message)
             print("OTP sent successfully!")
+            return render_template('forgetpassword.html', success="OTP sent successfully!")
     except Exception as e:
-        return render_template('forgetpassword.html',error = e)
+        errormsg = str(e)
+        print(errormsg)
+        return render_template('forgetpassword.html', errormsg=errormsg)
 
 
+@app.route("/verifyOTP", methods=['POST', 'GET']) 
+def verifyOTP():
+    otp1 = request.form.get('otp1')
+    otp2 = request.form.get('otp2')
+    otp3 = request.form.get('otp3')
+    otp4 = request.form.get('otp4')
+
+    received_otp = int(otp1 + otp2 + otp3 + otp4)
+
+    print("Received OTP:", type(received_otp))
+    print("Generated OTP:", type(otp[0])) 
+
+    if otp[0] == received_otp:  
+        otp.clear()
+        return render_template('forgetpassword.html', otpverify=True)
+    else:
+        return render_template('forgetpassword.html', otperror=True)
+
+@app.route("/passwordupdate",methods=['POST','GET'])
+def passwordupdate():
+    password = request.form.get('password')
+    conformpassword = request.form.get('conformpassword')
+
+    if password == conformpassword :
+        user_email = email[0]
+        print("Email ",user_email)
+        if user_email:
+            data_collection.update_one(
+                {'email': user_email}, 
+                {'$set': {'password': password}}
+            )
+            email.clear()
+            print("Password updated successfully!")
+            return render_template('login.html', success="Password updated successfully!")
+        else:
+            print("mail Not found Doesn't Match")
+            return render_template('forgetpassword.html', otpverify=True)
+    else:
+         print("Password Doesn't Match")
+         return render_template('forgetpassword.html', otpverify=True)
+    
 if __name__ == '__main__':
     app.run(port=1432, debug=True)
