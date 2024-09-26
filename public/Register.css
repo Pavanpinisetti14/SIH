@@ -166,3 +166,11 @@ input:focus + .labelline
 .re:hover{
     text-decoration: underline;
 }
+.forget-pass{
+    position: absolute;
+}
+.forget{
+    position: relative;
+    top:15px;
+    right:77px;
+}

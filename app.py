@@ -4,6 +4,9 @@ import re
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import smtplib
+import random
+from email.message import EmailMessage
 
 app = Flask(__name__, static_folder='public', template_folder='public')
 app.secret_key = 'login'
@@ -153,6 +156,39 @@ def comparepasswrod(password, conpassword):
     if password != conpassword:
         return True
     return False
+
+@app.route("/forgetpassword")
+def forgetpassword():
+    return render_template('forgetpassword.html')
+
+@app.route("/sendotp", methods=['POST','GET'])
+def sendotp():
+    otp = random.randint(100000, 999999)
+
+    sender_email = "pavan.sbspcm246@gmail.com"
+    sender_password = "Sbsp@123"
+
+    message = EmailMessage()
+    message.set_content(f'Your OTP is: {otp}')
+    message['Subject'] = 'Your OTP Code'
+    message['From'] = sender_email
+
+    email = request.form.get('email')
+    email = data_collection.find_one({'email':email})
+    if email :
+        message['To'] = email
+    else:
+        msg = "Email Address Is Not found,Then Valid email"
+        return render_template('forgetpassword.html', msg = msg)
+    
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login(sender_email, sender_password)
+            smtp.send_message(message)
+            print("OTP sent successfully!")
+    except Exception as e:
+        return render_template('forgetpassword.html',error = e)
+
 
 if __name__ == '__main__':
     app.run(port=1432, debug=True)

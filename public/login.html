@@ -24,15 +24,17 @@
                     <label id="pass">Password</label>
                 </div>
                 <br>
-                <div class="forget-pass redirect"><a  class="forget re" href="/forgetpasswod">Forget Password ?</a></div>
-                <br>
+                <!--  -->
+                <br><br>
                 <div class="signup-redirect redirect">
                     Don't have an account?
                     <a href="/signup" class="signup-re re">Signup</a> 
                 </div>
                 <br>
-                <button style="cursor:pointer;"class="submitbtn" type="submit">Submit</button>
-
+                <button style="cursor:pointer; width:300px;"class="submitbtn" type="submit">Submit</button>
+                <form action="/forgetpassword"></form>
+                    <div class="forget-pass redirect"><a  class="forget re" href="/forgetpassword" >Forget Password ?</a></div>
+                </form>
                 {% if unamealert %}
                 <script>alert("Invalid Email Address")</script>
                 {% endif %}
