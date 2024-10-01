@@ -175,3 +175,38 @@ input:focus + .labelline
 .re:hover{
     text-decoration: underline;
 }
+
+
+
+
+///-----cards sliding ------
+
+
+ let currentIndex = 0;
+let 
+function updatePaginationButtons() {
+    prevButton.disabled = currentIndex === 0;
+    nextButton.disabled = currentIndex >= 300 - 1;
+}
+
+function updateCardContainer() {
+    const offset = 0
+    cardContainer.style.transform = `translateX(${offset}px)`;
+    updatePaginationButtons();
+}
+
+prevButton.addEventListener('click', () => {
+    if (currentIndex > 0) {
+        currentIndex--;
+        updateCardContainer();
+    }
+});
+
+nextButton.addEventListener('click', () => {
+    if (currentIndex < 300 - 1) {
+        currentIndex++;
+        updateCardContainer();
+    }
+});
+
+updatePaginationButtons();

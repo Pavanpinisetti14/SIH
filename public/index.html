@@ -12,14 +12,20 @@
             <div class="header-logo">
                 <img src="https://res.cloudinary.com/dwjafitz1/image/upload/v1726567787/ya1d57stcocbj3a1okhu.png" alt="logo" width="100px" height="50px" style="border-radius: 50%;">
             </div>
-            <div class="header-data">
+            <div class="header-data" id="header-data">
                 <a class="header-data-a" href="#">Home</a>
-                <a class="header-data-a" href="#">Vulnerability's</a>
+                <a class="header-data-a" href="#solutions">Vulnerability's</a>
                 <a class="header-data-a" href="/login">Login</a>
                 <a href="signup" class="header-data-a" id="signup">SignUp</a>
-            </div>
-            <div>
                 <a class="header-data-a" href="#" id="help-link">Help</a> 
+            </div>
+            <!-- <div>
+                
+            </div> -->
+            <div class="hamberger" onclick="hambarger()">
+                <span class="hambergeer-line" id="ham-line-1"> </span>
+                <span class="hambergeer-line" id="ham-line-2"> </span>
+                <span class="hambergeer-line" id="ham-line-3"> </span>
             </div>
         </div>
     </header>
@@ -88,14 +94,14 @@
         <section>
             <div class="banner-vuln">
                 <div class="banner">
-                    <img src="https://res.cloudinary.com/dwjafitz1/image/upload/v1726571023/ss14fobuaalpv6ozfeft.png" alt="banner" width="100%" height="100%">
+                    <img src="https://res.cloudinary.com/dwjafitz1/image/upload/v1726571023/ss14fobuaalpv6ozfeft.png" alt="banner" width="100%" height="100%" class="banner-img" style="object-fit:contain">
                 </div>
             </div>
         </section>
         <section>
-            <div class="solution">
+            <div class="solution" id="solutions">
                 <div class="card-wrapper">
-                    <button class="control-button prev-button" id="prev-button">◀</button>
+                    <button class="control-button prev-button" id="prev-button" onclick="prevbtn()">◀</button>
                     <div class="card-container" id="card-container">
                         <!-- Cards here -->
                         <div class="wcu-card">
@@ -142,7 +148,7 @@
                         </div>
                         <!-- Repeat the .wcu-card block as needed -->
                     </div>
-                    <button class="control-button next-button" id="next-button">▶</button>
+                    <button class="control-button next-button" id="next-button" onclick="nextbtn()">▶</button>
                 </div>
             </div>
         </section>
@@ -194,7 +200,7 @@
 
                         </div>
                     </div>
-                </div>
+                </div><br>
                 <div class="webscraptool1">
                     <h2 class="contact-heading">Contact Us</h2>
                     <br>
@@ -222,45 +228,49 @@
         const cardContainer = document.getElementById('card-container');
         const prevButton = document.getElementById('prev-button');
         const nextButton = document.getElementById('next-button');
-
-        let currentIndex = 0;
-        const cardsPerPage = 4;
-        const cardWidth = 300;
-        const cardMargin = 20; 
-        const totalCards = document.querySelectorAll('.wcu-card').length;
-        const totalPages = Math.ceil(totalCards / cardsPerPage);
-
-        function updatePaginationButtons() {
-            prevButton.disabled = currentIndex === 0;
-            nextButton.disabled = currentIndex >= totalPages - 1;
-        }
-
-        function updateCardContainer() {
-            const offset = -currentIndex * cardsPerPage * (cardWidth + cardMargin * 2);
-            cardContainer.style.transform = `translateX(${offset}px)`;
-            updatePaginationButtons();
-        }
-
-        prevButton.addEventListener('click', () => {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateCardContainer();
+        let i = 0;
+        let len = cardContainer.children.length;
+        function nextbtn(){
+            if(i< 600){
+                i+=300
             }
-        });
-
-        nextButton.addEventListener('click', () => {
-            if (currentIndex < totalPages - 1) {
-                currentIndex++;
-                updateCardContainer();
+            else{
+                i = 0;
             }
-        });
-
-        updatePaginationButtons();
-
+            console.log("Working",i);
+            cardContainer.style.transition = '1s';
+            cardContainer.style.transform = `translateX(-${i}px)`;
+            
+        }
+        function prevbtn(){
+            if(i > 0){
+                i-=300
+            }
+            else{
+                i = 600;
+            }
+            console.log("Working",i);
+            cardContainer.style.transition = '1s';
+            cardContainer.style.transform = `translateX(-${i}px)`
+        }
         //popup(Help)
         document.getElementById("help-link").onclick = function(event) {
             event.preventDefault(); 
             document.getElementById("help-popup").style.display = "block"; 
+            console.log("clear")
+            line1.style.transform = 'rotate(0deg)';
+                line1.style.position = 'static';
+                line1.style.top = '0';
+                
+                line2.style.opacity = '1';
+                
+                line3.style.transform = 'rotate(0deg)';
+                line3.style.position = 'static';
+                line3.style.left = '0';
+                line3.style.top = '0';
+
+            data.style.transition = '2s';
+            data.style.display = 'none';
         }
         
         document.getElementById("close-popup").onclick = function() {
@@ -274,6 +284,51 @@
             }
         }
         
+        //---HamerBarger----
+
+        const line1 = document.getElementById('ham-line-1');
+        const line2 = document.getElementById('ham-line-2');
+        const line3 = document.getElementById('ham-line-3');
+        let isOpen = false;
+        const data = document.getElementById('header-data');
+
+        function hambarger() {
+            console.log("Toggle");
+            
+            if (!isOpen) {
+                line1.style.transform = 'rotate(45deg)';
+                line1.style.position = 'relative';
+                line1.style.top = '10px';
+                
+                line2.style.opacity = '0';
+                
+                line3.style.transform = 'rotate(-45deg)';
+                line3.style.position = 'relative';
+                line3.style.left = '1px';
+                line3.style.top = '-8px';
+
+                data.style.transition = '2s';
+                data.style.display = 'flex';
+                data.style.visibility = 'visible';
+            } else {
+                line1.style.transform = 'rotate(0deg)';
+                line1.style.position = 'static';
+                line1.style.top = '0';
+                
+                line2.style.opacity = '1';
+                
+                line3.style.transform = 'rotate(0deg)';
+                line3.style.position = 'static';
+                line3.style.left = '0';
+                line3.style.top = '0';
+
+                data.style.transition = '2s';
+                data.style.display = 'none';
+            }
+        
+            isOpen = !isOpen;
+        }
+
     </script>
 </body>
 </html>
