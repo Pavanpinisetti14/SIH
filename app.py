@@ -3,17 +3,28 @@ from pymongo import *
 import re
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
 import smtplib
 import random
 from email.message import EmailMessage
+import pandas as pd
+import time
+import sqlite3
+
+import sys
+sys.stdout.flush()
+sys.stdout.reconfigure(line_buffering=True)
+import os
+print(os.getcwd())  # Ensure the script is running in the expected location
+
 
 app = Flask(__name__, static_folder='public', template_folder='public')
 app.secret_key = 'login'
 otp = []
 email = []
-mongo_uri = 'mongodb+srv://Arjun:Pavan2003@cluster.pd7vx.mongodb.net/test?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true'
-client = MongoClient(mongo_uri)
+
+
+# mongo_uri = os.getenv("MONGO_URI")
+client = MongoClient('mongodb+srv://Gayathri:Gayathri23295@cluster0.mkjeg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
 db = client['test']
 data_collection = db.data
 
@@ -91,45 +102,60 @@ def loginsubmit():
         return render_template('login.html',unamealert="Invalid Email Address")
 
 
-@app.route('/scrape')
+
+
+
+
+# Function should be defined before calling
+
+
+def get_cve_data(cve_number):
+    url = f"https://cveawg.mitre.org/api/cve/{cve_number}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        cve_data = response.json()
+        cve_id = cve_data["cveMetadata"]["cveId"]
+        published_date = cve_data["cveMetadata"]["datePublished"]
+        vendor = cve_data["containers"]["cna"]["affected"][0].get("vendor", "N/A")
+        product = cve_data["containers"]["cna"]["affected"][0].get("product", "N/A")
+        severity = "N/A"
+        if "containers" in cve_data and "cna" in cve_data["containers"] and "metrics" in cve_data["containers"]["cna"]:
+            metrics = cve_data["containers"]["cna"]["metrics"]
+            if metrics and "cvssV4_0" in metrics[0]:
+                severity = metrics[0]["cvssV4_0"].get("baseSeverity", "N/A")
+        vulnerability_issue = cve_data["containers"]["cna"]["descriptions"][0]["value"]
+        return {
+            "CVE ID": cve_id,
+            "Published Date": published_date,
+            "Vendor (Company Name)": vendor,
+            "Severity": severity,
+            "Product Name": product,
+            "Vulnerability Issue": vulnerability_issue
+        }
+    return None
+
+@app.route('/scrape', methods=['GET'])
 def scrape():
-    url = "https://oem-xi.vercel.app/"
+    url = "https://nvd.nist.gov/vuln/search/results?form_type=Basic&results_type=overview&search_type=all&isCpeNameSearch=false"
     webdata = requests.get(url)
     data = BeautifulSoup(webdata.content, 'html.parser')
-
-    tabeldata = data.find('table', id='vulnTable')
-    if not tabeldata:
-        return "Element Not Found!"
-
-    li = []
-    row = tabeldata.find_all('tr')
-    for rows in row:
-        col = rows.find_all('td')
-        tabel = [cols.get_text(strip=True) for cols in col]
-        li.append(tabel)
-
-    if li:
-        li.pop(0)  
-
-   
-    columns = ["Company Name", "Product", "Manufacturing Date", "Issuses/Vulnerability's", "Level","Company Email", "Category","Code Name"]
-    df = pd.DataFrame(li, columns=columns)
-    df = df[df['Company Email'] == session.get('email')]
-
-    levels = ['Critical', 'High']
-    df = df[df['Level'].isin(levels)]
-
+    tabledata = data.find('tbody')
+    if not tabledata:
+        return jsonify({"error": "Element Not Found!"})
+    cve_list = [cve.get_text(strip=True) for rows in tabledata.find_all('tr') for cve in rows.find_all('th')]
+    vuln_list = [get_cve_data(cve) for cve in cve_list if get_cve_data(cve)]
+    
+    df = pd.DataFrame(vuln_list)
+    levels = ['MEDIUM', 'HIGH']
+    df = df[df['Severity'].isin(levels)]
     table_html = df.to_html(classes='table table-striped', index=False)
-    # print(session)
-   
-    firstname = session.get('firstname','')
-    lastname = session.get('lastname', '')
+    # return  if vuln_list else jsonify({"message": "No vulnerability data found."})
+    return render_template('user.html', table_html=table_html, firstname="Gayathri", lastname="Bonu")
 
-    return render_template('user.html', table_html=table_html, firstname=firstname, lastname=lastname)
 
 @app.route('/logout')
 def logout():
-    session.pop('email',None)
+    session.pop('email',None) 
     session.pop('firstname',None)
     session.pop('lastname',None)
 
@@ -192,8 +218,6 @@ def sendotp():
         errormsg = str(e)
         print(errormsg)
         return render_template('forgetpassword.html', errormsg=errormsg)
-
-
 @app.route("/verifyOTP", methods=['POST', 'GET']) 
 def verifyOTP():
     otp1 = request.form.get('otp1')
@@ -235,5 +259,5 @@ def passwordupdate():
          print("Password Doesn't Match")
          return render_template('forgetpassword.html', otpverify=True)
     
-if __name__ == '__main__':
-    app.run(port=1432, debug=True)
+if __name__ == "__main__":
+    app.run(port=1432,debug=True)  # Start Flask server
