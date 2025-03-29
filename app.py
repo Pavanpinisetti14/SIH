@@ -28,7 +28,7 @@ def run_scraper_periodically():
             current_dir = os.path.dirname(os.path.abspath(__file__))
             scraper_path = os.path.join(current_dir, "Scraping.py")
             subprocess.run(["python", scraper_path])
-        time.sleep(120)  # Runs every 2 minutes
+        time.sleep(240)  # Runs every 4 hours 
 
 # Start background thread
 thread = threading.Thread(target=run_scraper_periodically, daemon=True)
