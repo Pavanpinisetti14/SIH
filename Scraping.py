@@ -46,9 +46,11 @@ def send_email(data):
 
     # df = pd.DataFrame([data])
     # print(df)
+    print(data)
     cvenumber = data['CVE ID']
     published = data['Published Date']
-    cmpn = data['Company Name']
+    # chaneg the company name what you write in your database
+    cmpn = data['Vendor (Company Name)']
     sv = data['Severity']
     pn = data['Product Name']
     vi = data['Vulnerability Issue']
@@ -57,8 +59,9 @@ def send_email(data):
     message.set_content(f'We Found A New Vulnerability In Your Product\n CVE Number : {cvenumber}\n Published Date : {published} \n Company name : {cmpn} \n Serverity : {sv} \n Product Name: {pn} \n Vulnerabilities Issue : {vi}')
     message['Subject'] = 'New Vulnerability Alert'
     message['From'] = sender_email
-
     
+    # mi database lo company yala unndho alaga evali 
+    # email_record = collection.find_one({{"company": data['Company Name']}})
     
     email_record = {"email": "bonugayathri3@gmail.com"}
 
@@ -77,10 +80,7 @@ def send_email(data):
         print("Error sending email:", e)
 
 def store_database(record):
-    client = MongoClient('mongodb+srv://Gayathri:Gayathri23295@cluster0.mkjeg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
-    db = client['Records']
-    data_collection = db.data
-
+    # print("Records : ",record)
     try:
         if not data_collection.find_one({"CVE ID": record["CVE ID"]}):
             data_collection.insert_one(record)
@@ -96,6 +96,13 @@ li = []
 url = "https://nvd.nist.gov/vuln/search/results"
 headers = {"User-Agent": "Mozilla/5.0"}
 
+client = MongoClient('mongodb+srv://Arjun:Pavan2003@cluster.pd7vx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster')
+db1 = client['test']
+collection = db1.data
+
+db = client['Records']
+data_collection = db.data
+    
 max_retries = 5
 for attempt in range(max_retries):
     response = requests.get(url, headers=headers)
