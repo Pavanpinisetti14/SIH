@@ -16,17 +16,38 @@ sys.stdout.reconfigure(line_buffering=True)
 import os
 print(os.getcwd())  # Ensure the script is running in the expected location
 
+import subprocess
+import threading
+import time
+
+app = Flask(__name__)
+
+def run_scraper_periodically():
+    while True:
+        if os.environ.get("WERKZEUG_RUN_MAIN") == "true":  # Ensures execution only in the main process
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            scraper_path = os.path.join(current_dir, "Scraping.py")
+            subprocess.run(["python", scraper_path])
+        time.sleep(120)  # Runs every 2 minutes
+
+# Start background thread
+thread = threading.Thread(target=run_scraper_periodically, daemon=True)
+thread.start()
+
 
 app = Flask(__name__, static_folder='public', template_folder='public')
 app.secret_key = 'login'
 otp = []
 email = []
-
+user = {}
 
 # mongo_uri = os.getenv("MONGO_URI")
-client = MongoClient('mongodb+srv://Gayathri:Gayathri23295@cluster0.mkjeg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+client = MongoClient('mongodb+srv://Arjun:Pavan2003@cluster.pd7vx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster')
 db = client['test']
 data_collection = db.data
+
+db1 = client['Records']
+collection = db1.data
 
 
 @app.route('/<path:filename>')
@@ -95,6 +116,7 @@ def loginsubmit():
             session['firstname'] = user['firstname']
             session['lastname'] = user['lastname']
             session['email'] = user['email']
+            session['company'] = user['company']
             return redirect('/scrape')
         else:
             return render_template('login.html',passalert="Inavlid Password")
@@ -104,53 +126,45 @@ def loginsubmit():
 
 
 
-
-
-# Function should be defined before calling
-
-
-def get_cve_data(cve_number):
-    url = f"https://cveawg.mitre.org/api/cve/{cve_number}"
-    response = requests.get(url)
-    if response.status_code == 200:
-        cve_data = response.json()
-        cve_id = cve_data["cveMetadata"]["cveId"]
-        published_date = cve_data["cveMetadata"]["datePublished"]
-        vendor = cve_data["containers"]["cna"]["affected"][0].get("vendor", "N/A")
-        product = cve_data["containers"]["cna"]["affected"][0].get("product", "N/A")
-        severity = "N/A"
-        if "containers" in cve_data and "cna" in cve_data["containers"] and "metrics" in cve_data["containers"]["cna"]:
-            metrics = cve_data["containers"]["cna"]["metrics"]
-            if metrics and "cvssV4_0" in metrics[0]:
-                severity = metrics[0]["cvssV4_0"].get("baseSeverity", "N/A")
-        vulnerability_issue = cve_data["containers"]["cna"]["descriptions"][0]["value"]
-        return {
-            "CVE ID": cve_id,
-            "Published Date": published_date,
-            "Vendor (Company Name)": vendor,
-            "Severity": severity,
-            "Product Name": product,
-            "Vulnerability Issue": vulnerability_issue
-        }
-    return None
-
 @app.route('/scrape', methods=['GET'])
 def scrape():
-    url = "https://nvd.nist.gov/vuln/search/results?form_type=Basic&results_type=overview&search_type=all&isCpeNameSearch=false"
-    webdata = requests.get(url)
-    data = BeautifulSoup(webdata.content, 'html.parser')
-    tabledata = data.find('tbody')
-    if not tabledata:
-        return jsonify({"error": "Element Not Found!"})
-    cve_list = [cve.get_text(strip=True) for rows in tabledata.find_all('tr') for cve in rows.find_all('th')]
-    vuln_list = [get_cve_data(cve) for cve in cve_list if get_cve_data(cve)]
-    
-    df = pd.DataFrame(vuln_list)
-    levels = ['MEDIUM', 'HIGH']
-    df = df[df['Severity'].isin(levels)]
-    table_html = df.to_html(classes='table table-striped', index=False)
-    # return  if vuln_list else jsonify({"message": "No vulnerability data found."})
-    return render_template('user.html', table_html=table_html, firstname="Gayathri", lastname="Bonu")
+    try:
+        print("Getting Data...")
+
+        if 'company' not in session:
+            return "Error: No company found in session.", 400
+
+        company = session['company']
+        records = collection.find({'Vendor (Company Name)': company})  
+        print("Data ",records)
+        
+        records_list = list(records)
+
+        if not records_list:
+            return "No records found for the given company.", 404
+
+        df = pd.DataFrame(records_list)               
+        print(df)
+        if df.empty:
+            return "No valid data available.", 404
+        
+        
+        if '_id' in df.columns:
+            df.drop('_id', axis=1, inplace=True)
+
+        levels = ['MEDIUM', 'HIGH']
+        if 'Severity' in df.columns:
+            df = df[df['Severity'].isin(levels)]
+        else:
+            return "Error: 'Severity' column not found in data.", 400
+
+        table_html = df.to_html(classes='table table-striped', index=False)
+
+        return render_template('user.html', table_html=table_html, firstname=session['firstname'], lastname=session['lastname'])
+
+    except Exception as e:
+        return f"An error occurred: {str(e)}", 500
+
 
 
 @app.route('/logout')

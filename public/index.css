@@ -311,6 +311,28 @@ header{
     text-decoration: none;
     cursor: pointer;
 }
+table {
+    width: 100%;
+    /* border-collapse: collapse; */
+}
+
+table thead th {
+    text-align: center;
+}
+
+table tbody td {
+    text-align: left;
+    /* overflow: hidden; */
+    /* text-overflow: ellipsis; */
+    /* max-width: 200px; */
+}
+
+table tbody td.wrap-text {
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+
 @media (max-width: 450px) {
     .hamberger{
         display: block;
